@@ -11,16 +11,17 @@
 
 <br>
 
-<div class="container">
-  <div class="row">
-    <div class="col">
+<div class="card-columns">
+    <!-- BC CARD -->
+  <div class="card" style="max-width: 540px;">
 
-    <div class="jumbotron">
-      <p class="lead">Operating Conditions</p>
+      <img src="{{ url_for('static', filename='img/airfoil.png') }}" width="80%" height="80%" alt="...">
+
+      <div class="card-body">
+        <h5 class="card-title">Boundary Conditions</h5>
 
         <form method="post" action="{{ url_for('simulation.receive', caseid=caseid) }}">
-
-          <p>Operating Conditions 1</p>
+          <p>Operation 1</p>
           <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">U1 [m/s]</span>
@@ -33,7 +34,7 @@
           </div>
           <hr class="my-4">
 
-          <p>Operating Conditions 2</p>
+          <p>Operation 2</p>
           <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">U2 [m/s]</span>
@@ -46,13 +47,71 @@
           </div>
           <hr class="my-4">
 
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+          
         </form>
-    </div>
+        <button class="btn btn-primary" id="manualrunbtn">Run Simulation</button>
+        <div class="card-footer">
+          <small class="text-muted">Last updated 3 mins ago</small>
+        </div>
+      </div>
 
+  </div>
+
+  <!-- RESULT CARD1 -->
+  <div class="card" id="cardres1">
+    <img id="imgop1" src="{{ url_for('static', filename='img/logo.png') }}" alt="OP1" width="90%" height="90%" >
+    <div class="card-body">
+      <h5 class="card-title">Operating Point 1</h5>
+      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
     </div>
-    <div class="col">
-      <img src="{{ url_for('static', filename='img/airfoil.png') }}" width="600" height="300" class="mr-3" alt="...">
+    <div class="card-footer">
+      <small class="text-muted">Last updated 3 mins ago</small>
     </div>
   </div>
+
+  <!-- RESULT CARD2 -->
+  <div class="card" id="cardres2">
+    <img id="imgop2" src="{{ url_for('static', filename='img/logo.png') }}" alt="OP2" width="90%" height="90%" >
+    <div class="card-body">
+      <h5 class="card-title">Operating Point 2</h5>
+      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">Last updated 3 mins ago</small>
+    </div>
+  </div>
+
 </div>
+
+
+<!-- Javascrip -->
+<script type="text/javascript">
+
+  $(document).ready(function(){
+
+    $("#cardres1").hide();
+    $("#cardres2").hide();
+
+    // create a new timestamp     
+    function refreshImage(imgElement, imgURL){    
+        // create a new timestamp 
+        var timestamp = new Date().getTime();  
+        var el = document.getElementById(imgElement);  
+        var queryString = "?t=" + timestamp;    
+        el.src = imgURL + queryString;    
+    }
+
+    $('#manualrunbtn').click(function() { 
+          $.ajax({
+              url: "{{ url_for('simulation.simulate', caseid=caseid) }}",
+              success: function(data) {
+                refreshImage("imgop1", "{{ url_for('static', filename='img/flowfield1.png') }}");
+                refreshImage("imgop2", "{{ url_for('static', filename='img/flowfield2.png') }}");
+                $("#cardres1").show();
+                $("#cardres2").show();
+              }
+          });
+    });
+});
+</script>
