@@ -1,0 +1,28 @@
+{% macro render_table(columns, data=[], id='') -%}
+<!-- <div class="table-wrapper-scroll-y my-custom-scrollbar"> -->
+<table id="{{ id }}" class="table table-striped table-hover table-sm table-responsive">
+  <thead>
+    <tr>
+      {% for column in columns %}
+        <th class="th-sm" scope="col">{{ column }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    {% set outer_loop = loop %}
+    <tr id="{{ id }}_{{ outer_loop.index }}">
+      {% for val in row %}
+        {% if loop.first %}
+          <th id="{{ id }}_{{ outer_loop.index }}_{{ loop.index }}" scope="row">{{ val }}</th>
+        {% else %}
+          <td id="{{ id }}_{{ outer_loop.index }}_{{ loop.index }}">{{ val }} </td>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<!-- </div> -->
+
+{%- endmacro %}

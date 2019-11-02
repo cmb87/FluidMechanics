@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Modular Dashboard</title>
+
+    {% include 'html_dependencies.html' %}
+
+</head>
+<body>
+<!-- Include Macros -->
+{% from "basics/navbar.jinja" import render_navbar with context %}
+
+<!-- Navigation bar -->
+{{ render_navbar(user='', userhandling=false) }}
+
+<!-- Sidebar + main content -->
+<div class="container">
+
+    <br>
+    <div id="header">
+      <img id="logo" src="{{ url_for('static', filename='img/logo.jpg') }}" width="8%" height="8%" />
+    </div>
+    <br>
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+
+
+<!-- Footer -->
+<footer class="page-footer font-small blue">
+  <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2019 The modular Dashboard Team:
+    <a href="http://morpheus47.sytes.net"> atos.net</a>
+    <br>
+    Germany
+  </div>
+</footer>
+
+</body>
+</html>

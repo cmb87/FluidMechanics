@@ -1,0 +1,37 @@
+.form-size {
+    max-width: 640px;
+    margin: 0 auto;
+    background-color: #E5E5E5;
+    padding: 20px;
+    border: 3px solid #D5D5D5;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#header{
+    width:100%;
+    text-align:center;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  padding: 20px;
+  margin-right: auto;
+  /*width: 50%;*/
+}
+
+.sidebar {
+    background-color: #9A9A9A;
+}
+
+/*.my-custom-scrollbar {
+position: relative;
+height: 200px;
+overflow: auto;
+}
+.table-wrapper-scroll-y {
+display: block;
+}
+*/

@@ -1,0 +1,58 @@
+<br>
+<div class="container">
+    <div class="media">
+      <img src="{{ url_for('static', filename='svg/si-glyph-wrench.svg') }}" width="50" height="50" class="mr-3" alt="...">
+      <div class="media-body">
+        <h5 class="mt-0">Analysis {{ caseid }}</h5>
+        Please select the right boundary conditions before you start the simulation.
+      </div>
+    </div>
+</div>
+
+<br>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+    <div class="jumbotron">
+      <p class="lead">Operating Conditions</p>
+
+        <form method="post" action="{{ url_for('simulation.receive', caseid=caseid) }}">
+
+          <p>Operating Conditions 1</p>
+          <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">U1 [m/s]</span>
+            </div>
+            <input name="U1value" type="number" class="form-control" placeholder="{{ digitaltwin.U1 }}" value="{{ digitaltwin.U1 }}"/>
+            <div class="input-group-prepend">
+                <span class="input-group-text">&alpha;1 [deg]</span>
+            </div>
+            <input name="alpha1value" type="number" class="form-control" placeholder="{{ digitaltwin.alpha1 }}" value="{{ digitaltwin.alpha1 }}"/>
+          </div>
+          <hr class="my-4">
+
+          <p>Operating Conditions 2</p>
+          <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">U2 [m/s]</span>
+            </div>
+            <input name="U2value" type="number" class="form-control" placeholder="{{ digitaltwin.U2 }}" value="{{ digitaltwin.U2 }}"/>
+            <div class="input-group-prepend">
+                <span class="input-group-text">&alpha;2 [deg]</span>
+            </div>
+            <input name="alpha2value" type="number" class="form-control" placeholder="{{ digitaltwin.alpha2 }}" value="{{ digitaltwin.alpha2 }}"/>
+          </div>
+          <hr class="my-4">
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    </div>
+    <div class="col">
+      <img src="{{ url_for('static', filename='img/airfoil.png') }}" width="600" height="300" class="mr-3" alt="...">
+    </div>
+  </div>
+</div>

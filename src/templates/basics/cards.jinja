@@ -1,0 +1,52 @@
+{% macro render_cards(cases, description=['Pipeline','Name:'], urls={"build":"", "create": "", "remove":""}) -%}
+
+<div class="card-columns">
+{% for case in cases %}
+  <div class="card" id="datacard-{{loop.index}}" name="{{ case.id }}" >
+    <div class="card-body">
+      <h5 class="card-title">{{ description[0]}} {{ case.id  }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ description[1] }} {{ case.name  }}</h6>
+      <a href="{{ url_for(urls['build'], caseid=case.id) }}" class="btn btn-secondary edit" role="button">Edit</a>
+      <button type="button" class="btn btn-danger delete" id="itemDeleteButton-{{loop.index}}">Delete</button>
+      <p class="card-text"><small class="text-muted">Created {{ case.created }}</small></p>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+<button type="button" class="btn btn-secondary edit" id="itemCreateButton">New Pipeline</button>
+
+
+<!-- Javascrip -->
+<script type="text/javascript">
+
+  $(document).ready(function(){
+
+    $('#itemCreateButton').click(function() { 
+          $.ajax({
+              url: "{{ url_for(urls['create']) }}",
+              success: function(data) {
+                // alert(data);
+                window.location.reload()
+              }
+          });
+    });
+
+    $('button.btn.btn-danger.delete').click(function() { 
+         var card = $('#'+this.id).parents()[1];
+         var dataItemId = $('#'+card.id).attr('name');
+          $.ajax({
+              url: "{{ url_for(urls['remove']) }}",
+              data: {dataid: dataItemId},
+              success: function(data) {
+                // alert(data);
+              }
+          });
+         $('#'+card.id).remove();
+    });
+
+});
+</script>
+
+
+{%- endmacro %}

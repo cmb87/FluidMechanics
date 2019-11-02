@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% set active_page = "twin" %}
+{% block content %}
+
+<div class="card-columns">
+{% for case in cases %}
+  <div class="card" id="datacard-{{loop.index}}" name="{{ case.id }}" >
+    <div class="card-body">
+      <h5 class="card-title">Simulation {{ case.id  }}</h5>
+      <!-- <h6 class="card-subtitle mb-2 text-muted">File {{ case.simulationfile }}</h6> -->
+      <p class="card-text">Directory {{ case.directory }}</p>
+      <a href="{{ url_for('simulation.run', caseid=case.id) }}" class="btn btn-secondary edit" role="button">Analyse</a>
+      <button type="button" class="btn btn-danger delete" id="itemDeleteButton-{{loop.index}}">Delete</button>
+      <p class="card-text"><small class="text-muted">Created {{ case.created }}</small></p>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+<button type="button" class="btn btn-secondary edit" id="itemCreateButton">Create case</button>
+
+
+
+<!-- Javascrip -->
+<script type="text/javascript">
+
+  $(document).ready(function(){
+
+    //console.log(Object.getOwnPropertyNames($('itemEditButton-1')));
+
+    // $('button.btn.btn-secondary.edit').click(function() { 
+    //      var card = $('#'+this.id).parents()[1];
+    //      var dataItemId = $('#'+card.id).attr('name');
+         
+    // });
+
+
+    $('#itemCreateButton').click(function() { 
+          $.ajax({
+              url: "{{ url_for('simulation.create') }}",
+              success: function(data) {
+                alert(data);
+                window.location.reload()
+              }
+          });
+    });
+
+
+
+    $('button.btn.btn-danger.delete').click(function() { 
+         var card = $('#'+this.id).parents()[1];
+         var dataItemId = $('#'+card.id).attr('name');
+          $.ajax({
+              url: "{{ url_for('simulation.remove') }}",
+              data: {dataid: dataItemId},
+              success: function(data) {
+                alert(data);
+              }
+          });
+         $('#'+card.id).remove();
+    });
+
+
+});
+</script>
+
+{% endblock %}

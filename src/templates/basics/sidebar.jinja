@@ -1,0 +1,21 @@
+{% set active_page = active_page|default('home') -%}
+{% macro render_sidebar(links=[]) -%}
+  <div class="col-sm-2 col-md-1 sidebar">
+    <div class="sticky-top navbar-dark">
+      <a class="navbar-brand" href="#">Menue</a>
+      <ul class="navbar-nav">
+        {% for link in links %}
+          {% if link[0] is sameas active_page %}
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ url_for(link[2]) }}"><img class="d-inline-block align-top" width="20" height="20" alt="" src="{{ url_for('static', filename=link[3]) }}"/>{{ link[1] }} <span class="sr-only">(current)</span></a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for(link[2]) }}"><img class="d-inline-block align-top" width="20" height="20" alt="" src="{{ url_for('static', filename=link[3]) }}"/>{{ link[1] }}</a>
+            </li>  
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{%- endmacro %}
