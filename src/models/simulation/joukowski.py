@@ -41,6 +41,8 @@ class JoukowskiAirfoil():
         ### Flowfield varibales ###
         self.F, self.V = None, None
         self.xairfoil, self.zeta = None, None
+        self.lift, self.drag = 0.0, 0.0
+
 
     ### Circulation (from Kutta Condition) ###
     @property
@@ -48,20 +50,12 @@ class JoukowskiAirfoil():
         return -4*np.pi*self.Uinf*self.R*np.sin(self.beta+self.alpha)
     
     @property
-    def lift(self):
-        return -self.rho*self.gamma*self.Uinf
-
-    @property
-    def drag(self):
-        return -self.rho*self.gamma*self.Uinf
-
-    @property
     def lift_coefficient(self):
         return 2*self.lift/(self.rho*self.chord*self.Uinf**2)
 
     @property
     def drag_coefficient(self):
-        return 2*self.lift/(self.rho*self.chord*self.Uinf**2)
+        return 2*self.drag/(self.rho*self.chord*self.Uinf**2)
 
     ### Circle ###
     def circle(self, npts=200):
@@ -109,6 +103,18 @@ class JoukowskiAirfoil():
         self.zeta = self.trafo_joukowski(self.trafo_z1_to_z(z1))
         self.xairfoil = self.trafo_joukowski(self.circle(npts=nairfoil))
         self.chord = self.xairfoil.real.max()-self.xairfoil.real.min()
+
+        ### Calculate lift and drag ###
+        x = (self.zeta[:,0].real-self.zeta[:,0].real.min())/(self.zeta[:,0].real.max()-self.zeta[:,0].real.min())
+        y = (self.zeta[:,0].imag-self.zeta[:,0].real.min())/(self.zeta[:,0].real.max()-self.zeta[:,0].real.min())
+        cp = 1-(np.absolute(self.V[:,0])/self.Uinf)**2
+
+        cpm = np.asarray([0.5*(cp[i+1]+cp[i]) for i in range(cp.shape[0]-1)])
+        dx, dy = np.diff(x), np.diff(y)
+        ds = np.sqrt(dx**2+dy**2)
+
+        self.drag = np.sum(cpm*(-dy/ds)*ds)
+        self.lift = np.sum(cpm*(+dx/ds)*ds)
 
     ### Plot flowfield ###
     def plot_flowfield(self, returnfig=False, store=False, name="flowfield.png"):

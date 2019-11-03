@@ -4,8 +4,163 @@
       <img src="{{ url_for('static', filename='svg/si-glyph-calculator.svg') }}" width="50" height="50" class="mr-3" alt="...">
       <div class="media-body">
         <h5 class="mt-0">Analysis {{ caseid }}</h5>
-        Please select the right boundary conditions before you start the simulation.
+        Here you can optimize your airfoil design for both operating points (maximize cl, minimize cd). The optimize designs can be found on the Pareto frontier.
       </div>
     </div>
 </div>
 
+<hr>
+<br>
+
+<div class="card">
+  <div class="card-header">
+    Particle Swarm Optimization <cite title="Source Title"></cite>
+  </div>
+
+  <div class="card-body">
+  <p class="card-text">Please select your optimization settings.</p>
+        <hr class="my-4">  
+        <form action="#" onsubmit="yourJsFunction();return false" id="optiform" >
+
+          <p class="card-text">Optimizer Settings</p>
+          <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">IterMax</span>
+            </div>
+            <input name="iterMax" type="number" class="form-control" placeholder="10" value="10" min="1" step="1"/>
+            <div class="input-group-prepend">
+                <span class="input-group-text">Swarm Size</span>
+            </div>
+            <input name="swarmsize" type="number" class="form-control" placeholder="30" value="30" step="1" min="1"/>
+           
+          </div>
+          <hr class="my-4">  
+
+          <!-- ROI -->
+          <p class="card-text">Region of Interest</p>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">LiftOp1</span>
+                </div>
+                <select class="custom-select" name="isTargetLiftOp1">
+                    <option value="1" selected>Maximize</option>
+                    <option value="2">Minimize</option>
+                    <option value="3">Constraint</option>
+                </select>
+                <input name="LiftMinOp1" type="number" class="form-control" placeholder="0" value="0"/>
+                <input name="LiftMaxOp1" type="number" class="form-control" placeholder="1" value="1"/>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">LiftOp2</span>
+                </div>
+                <select class="custom-select" name="isTargetLiftOp2">
+                    <option value="1" selected>Maximize</option>
+                    <option value="2">Minimize</option>
+                    <option value="3">Constraint</option>
+                </select>
+                <input name="LiftMinOp2" type="number" class="form-control" placeholder="0" value="0"/>
+                <input name="LiftMaxOp2" type="number" class="form-control" placeholder="1" value="1"/>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">DragOp1</span>
+                </div>
+                <select class="custom-select" name="isTargetDragOp1">
+                    <option value="-1" selected>Maximize</option>
+                    <option value="1">Minimize</option>
+                    <option value="2">Constraint</option>
+                </select>
+                <input name="DragMinOp1" type="number" class="form-control" placeholder="0" value="0"/>
+                <input name="DragMaxOp1" type="number" class="form-control" placeholder="1" value="1"/>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">DragOp2</span>
+                </div>
+                <select class="custom-select" name="isTargetDragOp2">
+                    <option value="-1" selected>Maximize</option>
+                    <option value="1">Minimize</option>
+                    <option value="2">Constraint</option>
+                </select>
+
+                <input name="DragMinOp2" type="number" class="form-control" placeholder="0" value="0"/>
+                <input name="DragMaxOp2" type="number" class="form-control" placeholder="1" value="1"/>
+            </div>
+  
+            <!-- Design Space -->
+            <hr class="my-4">  
+            <p class="card-text">Design Space Bounds</p>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">R</span>
+                </div>
+                <input name="Rmin" type="number" class="form-control" placeholder="{{ digitaltwin.R0 }}" value="{{ digitaltwin.R0 }}" min="1" step="0.1"/>
+                <input name="Rmax" type="number" class="form-control "placeholder="{{ digitaltwin.R0 }}" value="{{ digitaltwin.R0 }}" min="1" step="0.1"/>
+            </div>
+
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">&beta;</span>
+                </div>
+                <input name="betamin" type="number" class="form-control" placeholder="{{ digitaltwin.beta0 }}" value="{{ digitaltwin.beta0 }}" step="0.1"/>
+                <input name="betamax" type="number" class="form-control "placeholder="{{ digitaltwin.beta0 }}" value="{{ digitaltwin.beta0 }}" step="0.1"/>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">a</span>
+                </div>
+                <input name="amin" type="number" class="form-control" placeholder="1" value="1"   step="0.1" min="1"/>
+                <input name="amax" type="number" class="form-control "placeholder="1.1" value="1.1" step="0.1" min="1"/>
+            </div>
+
+
+          <hr class="my-4">
+
+        </form>
+
+  <button class="btn btn-primary" id="startOptiBtn">Start</button>
+  </div>
+</div>
+
+{% for plot in plots %}
+    {% for part in plot %}
+        {{part | safe}}
+    {% endfor %}
+{% endfor %}
+
+<!-- Javascrip -->
+<script type="text/javascript">
+
+  $(document).ready(function(){
+
+    // $("#cardres1").hide();
+    // $("#cardres2").hide();
+
+
+    // Update Geometry
+    $('#startOptiBtn').click(function() { 
+
+          $("#startOptiBtn").attr("disabled", true);
+
+          $.ajax({
+              data: $('#optiform').serialize(),
+              url: "{{ url_for('simulation.optimize', caseid=caseid) }}",
+              success: function(resp) {
+                alert("Optimization finished!")
+              }
+          });
+
+          $("#startOptiBtn").attr("disabled", false);
+
+        });
+
+});
+</script>

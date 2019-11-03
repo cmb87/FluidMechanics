@@ -148,7 +148,8 @@ class Database(object):
                 with con:
                     cur = con.cursor()
                     cur.execute("INSERT INTO {}({}) VALUES({})".format(tablename, ', '.join(keys), placeholders), vals)
-                    return True
+                    return cur.lastrowid
+                    
             except lite.Error as e:
                 logger.warning("{}".format(e))
             except Exception as e:

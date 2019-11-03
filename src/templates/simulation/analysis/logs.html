@@ -1,0 +1,39 @@
+<br>
+<div class="container">
+    <div class="media">
+      <img src="{{ url_for('static', filename='svg/si-glyph-telescope.svg') }}" width="50" height="50" class="mr-3" alt="...">
+      <div class="media-body">
+        <h5 class="mt-0">Analysis {{ caseid }}</h5>
+        This tab shows the different log events caused by changing geometries or boundary conditions and running optimizations and simulations.
+      </div>
+    </div>
+</div>
+
+<br>
+
+<button class="btn btn-primary" id="refreshBtn">Refresh</button>
+
+<hr>
+<br>
+
+{% for logmsg in logmsgs | reverse %}
+<div class="card">
+  <div class="card-header">
+    User {{ logmsg.user }} @ <cite title="Source Title"> {{ logmsg.created }}</cite>
+  </div>
+  <div class="card-body">
+    <blockquote class="blockquote mb-0">
+      <pre>{{ logmsg.message }}</pre>
+    </blockquote>
+  </div>
+</div>
+{% endfor %}
+
+
+<script>
+    $(document).ready(function(){
+        $("#refreshBtn").click(function(){
+            location.reload(true);
+        });
+    });
+</script>

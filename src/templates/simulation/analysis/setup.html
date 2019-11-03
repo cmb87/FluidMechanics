@@ -31,7 +31,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">U1 [m/s]</span>
             </div>
-            <input name="U1value" type="number" class="form-control" placeholder="{{ digitaltwin.U1 }}" value="{{ digitaltwin.U1 }}"/>
+            <input name="U1value" type="number" class="form-control" placeholder="{{ digitaltwin.U1 }}" value="{{ digitaltwin.U1 }}" min="0.1" step="0.1"/>
             <div class="input-group-prepend">
                 <span class="input-group-text">&alpha;1 [deg]</span>
             </div>
@@ -44,7 +44,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">U2 [m/s]</span>
             </div>
-            <input name="U2value" type="number" class="form-control" placeholder="{{ digitaltwin.U2 }}" value="{{ digitaltwin.U2 }}"/>
+            <input name="U2value" type="number" class="form-control" placeholder="{{ digitaltwin.U2 }}" value="{{ digitaltwin.U2 }}" min="0.1" step="0.1"/>
             <div class="input-group-prepend">
                 <span class="input-group-text">&alpha;2 [deg]</span>
             </div>
@@ -57,7 +57,7 @@
 
       </div>
       <div class="card-footer">
-        <small class="text-muted">Last updated 3 mins ago</small>
+        <small class="text-muted" id="timestampbc">Last updated 3 mins ago</small>
       </div>
 
   </div>
@@ -75,24 +75,26 @@
         <form action="#" onsubmit="yourJsFunction();return false" id="geomform" >
           <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">R [m]</span>
+                <span class="input-group-text">R</span>
             </div>
-            <input name="geomparamr" type="number" class="form-control" placeholder="{{ digitaltwin.U1 }}" value="{{ digitaltwin.U1 }}"/>
+            <input name="R0" type="number" class="form-control" placeholder="{{ digitaltwin.R0 }}" value="{{ digitaltwin.R0 }}" min="1" step="0.1"/>
             <div class="input-group-prepend">
-                <span class="input-group-text">&beta; [deg]</span>
+                <span class="input-group-text">&beta;</span>
             </div>
-            <input name="geomparambeta" type="number" class="form-control" placeholder="{{ digitaltwin.alpha1 }}" value="{{ digitaltwin.alpha1 }}"/>
+            <input name="beta0" type="number" class="form-control" placeholder="{{ digitaltwin.beta0 }}" value="{{ digitaltwin.beta0 }}" step="0.1"/>
             <div class="input-group-prepend">
-                <span class="input-group-text">a; [m]</span>
+                <span class="input-group-text">a</span>
             </div>
-            <input name="geomparama" type="number" class="form-control" placeholder="{{ digitaltwin.alpha1 }}" value="{{ digitaltwin.alpha1 }}"/>
+            <input name="a0" type="number" class="form-control" placeholder="{{ digitaltwin.a0 }}" value="{{ digitaltwin.a0 }}" min="1" step="0.1"/>
           </div>
           <hr class="my-4">
         </form>
 
+        <button class="btn btn-primary" id="updateGeometryBtn">Update</button>
+
     </div>
     <div class="card-footer">
-      <small class="text-muted">Last updated 3 mins ago</small>
+      <small class="text-muted" id="timestampgeom">Last updated 3 mins ago</small>
     </div>
   </div>
 
@@ -125,7 +127,7 @@
       <pre class="card-text" id="textop1_cd"></pre>
     </div>
     <div class="card-footer">
-      <small class="text-muted">Last updated 3 mins ago</small>
+      <small class="text-muted" id="timestampop1">Last updated 3 mins ago</small>
     </div>
   </div>
 
@@ -159,7 +161,7 @@
       <pre class="card-text" id="textop2_cd"></pre>
     </div>
     <div class="card-footer">
-      <small class="text-muted">Last updated 3 mins ago</small>
+      <small class="text-muted" id="timestampop2">Last updated 3 mins ago</small>
     </div>
   </div>
 
@@ -179,9 +181,6 @@
     $( "#cardres1" ).draggable();
     $( "#cardres2" ).draggable();
 
-
-    
-
     // create a new timestamp     
     function refreshImage(imgElement, imgURL){    
         // create a new timestamp 
@@ -191,11 +190,40 @@
         el.src = imgURL + queryString;    
     }
 
+
+    // create a new timestamp     
+    function updateTimeStamp(imgElement){ 
+        var now = new Date(Date.now());
+        var formatted = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+        $("#"+imgElement).text("Last updated @"+formatted);
+    }
+    // Update Geometry
+    $('#updateGeometryBtn').click(function() { 
+
+          $("#updateGeometryBtn").attr("disabled", true);
+
+          $.ajax({
+              data: $('#geomform').serialize(),
+              url: "{{ url_for('simulation.updateGeometry', caseid=caseid) }}",
+              success: function(resp) {
+                updateTimeStamp("timestampgeom");
+              }
+          });
+
+          $("#updateGeometryBtn").attr("disabled", false);
+
+        });
+
+    // Update and run simulation
     $('#manualrunbtn').click(function() { 
+
+          $("#manualrunbtn").attr("disabled", true);
+
           $.ajax({
               data: $('#bcform').serialize(),
-              url: "{{ url_for('simulation.receive', caseid=caseid) }}",
+              url: "{{ url_for('simulation.updateBoundaryConditions', caseid=caseid) }}",
               success: function(resp) {
+                updateTimeStamp("timestampbc");
                 //alert(resp);
               }
           });
@@ -210,13 +238,14 @@
                 refreshImage("imgop1cp", "{{ url_for('static', filename='res/'+digitaltwin.directory+'/profile1.png') }}");
                 refreshImage("imgop2cp", "{{ url_for('static', filename='res/'+digitaltwin.directory+'/profile2.png') }}");
 
-                $("#textop1_cl"  ).text("Lift: "+data["op1"]["Lift"]+"N"+ " " +"Cl:   "+data["op1"]["Cl"]);
-                $("#textop1_cd"  ).text("Drag: "+data["op1"]["Drag"]+"N"+ " " +"Cd:   "+data["op1"]["Cd"]);
+                $("#textop1_cl"  ).text("Lift: "+data["LiftOp1"]+"N"+ " " +"Cl:   "+data["ClOp1"]);
+                $("#textop1_cd"  ).text("Drag: "+data["DragOp1"]+"N"+ " " +"Cd:   "+data["CdOp1"]);
 
-                $("#textop2_cl"  ).text("Lift: "+data["op2"]["Lift"]+"N"+ " " +"Cl:   "+data["op2"]["Cl"]);
-                $("#textop2_cd"  ).text("Drag: "+data["op2"]["Drag"]+"N"+ " " +"Cd:   "+data["op2"]["Cd"]);
+                $("#textop2_cl"  ).text("Lift: "+data["LiftOp2"]+"N"+ " " +"Cl:   "+data["ClOp2"]);
+                $("#textop2_cd"  ).text("Drag: "+data["DragOp2"]+"N"+ " " +"Cd:   "+data["CdOp2"]);
 
-
+                updateTimeStamp("timestampop1");
+                updateTimeStamp("timestampop2");
 
                 $("#cardres1").fadeIn();
                 $("#cardres2").fadeIn();
@@ -224,6 +253,7 @@
 
               }
           });
+          $("#manualrunbtn").attr("disabled", false)
     });
 });
 </script>

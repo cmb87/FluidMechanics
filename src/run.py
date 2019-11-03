@@ -13,6 +13,7 @@ from src.common.database import Database
 from src.config import SECRETKEY
 from src.config import SIMCOLLECTION
 from src.config import DESIGNSCOLLECTION
+from src.config import LOGCOLLECTION
 
 ### Initialize Flask ###
 app = Flask(__name__)
@@ -26,12 +27,15 @@ app.secret_key = SECRETKEY
 def init_db():
     tables = {SIMCOLLECTION:  {"id": "INTEGER PRIMARY KEY AUTOINCREMENT", "directory": "TEXT",
                                 "alpha1": "FLOAT", "alpha2": "FLOAT", "U1": "FLOAT", "U2": "FLOAT",
-                                "created":"TIMESTAMP"},
+                                "R0": "FLOAT", "a0": "FLOAT", "beta0": "FLOAT", "created":"TIMESTAMP"},
 
+              LOGCOLLECTION:  {"id": "INTEGER PRIMARY KEY AUTOINCREMENT", "user":"TEXT", "caseid": "INT" ,"created":"TIMESTAMP",
+                               "message": "TEXT"},
 
-              DESIGNSCOLLECTION:  {"id": "INTEGER PRIMARY KEY AUTOINCREMENT", "R": "FLOAT", "a": "FLOAT", "Uinf": "FLOAT",
-                                   "alpha": "FLOAT", "beta": "FLOAT", "rho": "FLOAT", "cl": "FLOAT", "cd": "FLOAT", "L": "FLOAT", 
-                                   "D": "FLOAT", "opid": "INT", "analysisid":"INT"},
+              DESIGNSCOLLECTION:  {"id": "INTEGER PRIMARY KEY AUTOINCREMENT", "caseid": "INT",
+                                   "clop1": "FLOAT", "cdop1": "FLOAT", "lop1": "FLOAT", "dop1": "FLOAT",
+                                   "clop2": "FLOAT", "cdop2": "FLOAT", "lop2": "FLOAT", "dop2": "FLOAT",
+                                   "R": "FLOAT", "a": "FLOAT", "beta": "FLOAT"} 
               }
 
     for table, columns in tables.items():
