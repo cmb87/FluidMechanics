@@ -1,6 +1,6 @@
-from flask import Blueprint, request, session, redirect, url_for, render_template
+from flask import Blueprint, request, session, redirect, url_for, render_template, jsonify
 import numpy as np
-
+import json
 from src.models.simulation.digitaltwin import DigitalTwin
 from src.common.flask_redirect import redirect_url
 
@@ -28,24 +28,28 @@ def remove():
     return "DataItem deleted successfully!"
 
 ### Update Data item ###
-@dt_blueprint.route('/receive/<string:caseid>', methods=['GET', 'POST'])
+@dt_blueprint.route('/receive/<string:caseid>')
 def receive(caseid):
-    dt = DigitalTwin.find_by_id(caseid)
-    dt.U1 = float(request.form['U1value'])
-    dt.U2 = float(request.form['U2value']) 
-    dt.alpha1 = float(request.form['alpha1value'])
-    dt.alpha2 = float(request.form['alpha2value']) 
-    dt.update()
-    return redirect(redirect_url())
+    try:
+        dt = DigitalTwin.find_by_id(caseid)
+        dt.U1 = float(request.args.get('U1value'))
+        dt.U2 = float(request.args.get('U2value'))
+        dt.alpha1 = float(request.args.get('alpha1value'))
+        dt.alpha2 = float(request.args.get('alpha2value'))
+        dt.update()
+        return "Successfull" #redirect(redirect_url())
+    except:
+        return "Update not successfull!"
 
 ### Run Simulation ###
 @dt_blueprint.route('/simulate/<string:caseid>', methods=['GET', 'POST'])
 def simulate(caseid):
 
     dt = DigitalTwin.find_by_id(caseid)
-    dt.simulate()
+    res = dt.simulate()
 
-    return "successful!"
+    print(json.dumps(res))
+    return json.dumps(res)
 
 
 ### Run the digital twin ###

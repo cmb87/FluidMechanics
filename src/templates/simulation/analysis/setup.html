@@ -10,17 +10,22 @@
 </div>
 
 <br>
-
+<!-- CARDS VIEW -->
 <div class="card-columns">
-    <!-- BC CARD -->
-  <div class="card" style="max-width: 540px;">
 
+
+    <!-- BC CARD -->
+  <div class="card" style="max-width: 540px;" id="cardboundaryconditions">
+      <div class="card-header">
+        Boundary Conditions
+      </div>
       <img src="{{ url_for('static', filename='img/airfoil.png') }}" width="80%" height="80%" alt="...">
 
       <div class="card-body">
         <h5 class="card-title">Boundary Conditions</h5>
 
-        <form method="post" action="{{ url_for('simulation.receive', caseid=caseid) }}">
+        <!-- The BC Form -->
+        <form action="#" onsubmit="yourJsFunction();return false" id="bcform" >
           <p>Operation 1</p>
           <div class="input-group">
             <div class="input-group-prepend">
@@ -46,24 +51,78 @@
             <input name="alpha2value" type="number" class="form-control" placeholder="{{ digitaltwin.alpha2 }}" value="{{ digitaltwin.alpha2 }}"/>
           </div>
           <hr class="my-4">
-
-          <button type="submit" class="btn btn-primary">Update</button>
-          
         </form>
+
         <button class="btn btn-primary" id="manualrunbtn">Run Simulation</button>
-        <div class="card-footer">
-          <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
+
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Last updated 3 mins ago</small>
       </div>
 
   </div>
 
+
+  <!-- GEOMETRY CARD -->
+  <div class="card" id="cardgeometry">
+    <div class="card-header">
+      Airfoil Shape
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Airfoil Shape</h5>
+      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+
+        <form action="#" onsubmit="yourJsFunction();return false" id="geomform" >
+          <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">R [m]</span>
+            </div>
+            <input name="geomparamr" type="number" class="form-control" placeholder="{{ digitaltwin.U1 }}" value="{{ digitaltwin.U1 }}"/>
+            <div class="input-group-prepend">
+                <span class="input-group-text">&beta; [deg]</span>
+            </div>
+            <input name="geomparambeta" type="number" class="form-control" placeholder="{{ digitaltwin.alpha1 }}" value="{{ digitaltwin.alpha1 }}"/>
+            <div class="input-group-prepend">
+                <span class="input-group-text">a; [m]</span>
+            </div>
+            <input name="geomparama" type="number" class="form-control" placeholder="{{ digitaltwin.alpha1 }}" value="{{ digitaltwin.alpha1 }}"/>
+          </div>
+          <hr class="my-4">
+        </form>
+
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">Last updated 3 mins ago</small>
+    </div>
+  </div>
+
   <!-- RESULT CARD1 -->
   <div class="card" id="cardres1">
-    <img id="imgop1" src="{{ url_for('static', filename='img/logo.png') }}" alt="OP1" width="90%" height="90%" >
+    <div class="card-header">
+      Simulation Result
+    </div>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="home-tab-res1" data-toggle="tab" href="#home-res1" role="tab" aria-controls="home-res1" aria-selected="true">Contour</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab-res1" data-toggle="tab" href="#profile-res1" role="tab" aria-controls="profile-res1" aria-selected="false">Profile Loading</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="home-res1" role="tabpanel" aria-labelledby="home-tab-res1">
+        <img id="imgop1" src="{{ url_for('static', filename='img/logo.png') }}" alt="OP1" width="100%" height="100%" >
+      </div>
+      <div class="tab-pane fade" id="profile-res1" role="tabpanel" aria-labelledby="profile-tab-res1">
+        <img id="imgop1cp" src="{{ url_for('static', filename='img/logo.png') }}" alt="OP1" width="100%" height="100%" >
+      </div>
+    </div>
+
     <div class="card-body">
       <h5 class="card-title">Operating Point 1</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <pre class="card-text" id="textop1_cl"></pre>
+      <pre class="card-text" id="textop1_cd"></pre>
     </div>
     <div class="card-footer">
       <small class="text-muted">Last updated 3 mins ago</small>
@@ -72,10 +131,32 @@
 
   <!-- RESULT CARD2 -->
   <div class="card" id="cardres2">
-    <img id="imgop2" src="{{ url_for('static', filename='img/logo.png') }}" alt="OP2" width="90%" height="90%" >
+    <div class="card-header">
+      Simulation Result
+    </div>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="home-tab-res2" data-toggle="tab" href="#home-res2" role="tab" aria-controls="home-res2" aria-selected="true">Contour</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab-res2" data-toggle="tab" href="#profile-res2" role="tab" aria-controls="profile-res2" aria-selected="false">Profile Loading</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="home-res2" role="tabpanel" aria-labelledby="home-tab-res2">
+        <img id="imgop2" src="{{ url_for('static', filename='img/logo.png') }}" alt="OP2" width="100%" height="100%" >
+      </div>
+      <div class="tab-pane fade" id="profile-res2" role="tabpanel" aria-labelledby="profile-tab-res2">
+        <img id="imgop2cp" src="{{ url_for('static', filename='img/logo.png') }}" alt="OP1" width="100%" height="100%" >
+      </div>
+    </div>
+
+    
     <div class="card-body">
       <h5 class="card-title">Operating Point 2</h5>
-      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+      <pre class="card-text" id="textop2_cl"></pre>
+      <pre class="card-text" id="textop2_cd"></pre>
     </div>
     <div class="card-footer">
       <small class="text-muted">Last updated 3 mins ago</small>
@@ -93,6 +174,14 @@
     $("#cardres1").hide();
     $("#cardres2").hide();
 
+    $( "#cardboundaryconditions" ).draggable();
+    $( "#cardgeometry" ).draggable();
+    $( "#cardres1" ).draggable();
+    $( "#cardres2" ).draggable();
+
+
+    
+
     // create a new timestamp     
     function refreshImage(imgElement, imgURL){    
         // create a new timestamp 
@@ -104,12 +193,35 @@
 
     $('#manualrunbtn').click(function() { 
           $.ajax({
+              data: $('#bcform').serialize(),
+              url: "{{ url_for('simulation.receive', caseid=caseid) }}",
+              success: function(resp) {
+                //alert(resp);
+              }
+          });
+
+            //action=""
+          $.ajax({
               url: "{{ url_for('simulation.simulate', caseid=caseid) }}",
-              success: function(data) {
-                refreshImage("imgop1", "{{ url_for('static', filename='img/flowfield1.png') }}");
-                refreshImage("imgop2", "{{ url_for('static', filename='img/flowfield2.png') }}");
-                $("#cardres1").show();
-                $("#cardres2").show();
+              success: function(resp) {
+                data = JSON.parse(resp);
+                refreshImage("imgop1", "{{ url_for('static', filename='res/'+digitaltwin.directory+'/flowfield1.png') }}");
+                refreshImage("imgop2", "{{ url_for('static', filename='res/'+digitaltwin.directory+'/flowfield2.png') }}");
+                refreshImage("imgop1cp", "{{ url_for('static', filename='res/'+digitaltwin.directory+'/profile1.png') }}");
+                refreshImage("imgop2cp", "{{ url_for('static', filename='res/'+digitaltwin.directory+'/profile2.png') }}");
+
+                $("#textop1_cl"  ).text("Lift: "+data["op1"]["Lift"]+"N"+ " " +"Cl:   "+data["op1"]["Cl"]);
+                $("#textop1_cd"  ).text("Drag: "+data["op1"]["Drag"]+"N"+ " " +"Cd:   "+data["op1"]["Cd"]);
+
+                $("#textop2_cl"  ).text("Lift: "+data["op2"]["Lift"]+"N"+ " " +"Cl:   "+data["op2"]["Cl"]);
+                $("#textop2_cd"  ).text("Drag: "+data["op2"]["Drag"]+"N"+ " " +"Cd:   "+data["op2"]["Cd"]);
+
+
+
+                $("#cardres1").fadeIn();
+                $("#cardres2").fadeIn();
+
+
               }
           });
     });

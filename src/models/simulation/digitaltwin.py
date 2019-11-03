@@ -51,6 +51,11 @@ class DigitalTwin(object):
         self.U1 = 1 if U1 is None else U1
         self.U2 = 1 if U2 is None else U2
 
+        if os.path.isdir("./static/res/{}".format(self.directory)):
+            pass
+        else:
+            os.mkdir("./static/res/{}".format(self.directory))
+
     ### Convert to JSON ###
     def json(self):
         return {"id": self.id,
@@ -88,8 +93,18 @@ class DigitalTwin(object):
 
         sim1.calculateFlowField()
         sim2.calculateFlowField()
-        sim1.plot_flowfield(store=True, name="static/img/flowfield1.png")
-        sim2.plot_flowfield(store=True, name="static/img/flowfield2.png")
+
+        sim1.plot_flowfield(store=True, name="./static/res/{}/{}".format(self.directory, "flowfield1.png"))
+        sim2.plot_flowfield(store=True, name="./static/res/{}/{}".format(self.directory, "flowfield2.png"))
+
+        sim1.plot_cp(store=True, name="./static/res/{}/{}".format(self.directory, "profile1.png"))
+        sim2.plot_cp(store=True, name="./static/res/{}/{}".format(self.directory, "profile2.png"))
+
+        return {"op1":{"Lift": np.around(sim1.lift,2), "Cl": np.around(sim1.lift_coefficient,2),
+                "Drag": np.around(sim1.drag,2), "Cd": np.around(sim1.drag_coefficient,2)},
+                "op2":{"Lift": np.around(sim2.lift,2), "Cl": np.around(sim2.lift_coefficient,2),
+                "Drag": np.around(sim2.drag,2), "Cd": np.around(sim2.drag_coefficient,2)},
+                }
 
     ### Remove from DB ###
     @staticmethod

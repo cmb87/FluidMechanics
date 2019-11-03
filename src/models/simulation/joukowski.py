@@ -132,7 +132,7 @@ class JoukowskiAirfoil():
 
         if store:
             plt.axis([-4,4,-4,4])
-            plt.savefig(name)
+            plt.savefig(name, bbox_inches='tight')
             plt.close()
             return 
 
@@ -143,7 +143,7 @@ class JoukowskiAirfoil():
             plt.show()
 
     ### Plot CP ###
-    def plot_cp(self):
+    def plot_cp(self, store=False, name="profile_load.png"):
 
         x = (self.zeta[:,0].real-self.zeta[:,0].real.min())/(self.zeta[:,0].real.max()-self.zeta[:,0].real.min())
         y = (self.zeta[:,0].imag-self.zeta[:,0].real.min())/(self.zeta[:,0].real.max()-self.zeta[:,0].real.min())
@@ -153,6 +153,12 @@ class JoukowskiAirfoil():
         plt.grid(True)
         plt.xlabel("x/c [-]")
         plt.ylabel("$c_p$ [-]")
+
+        if store:
+            plt.savefig(name, bbox_inches='tight')
+            plt.close()
+            return 
+
         plt.show()
 
 
