@@ -3,13 +3,38 @@
 
 <div class="jumbotron">
   <h1 class="display-4">Welcome!</h1>
-  <p class="lead">Please register for the full expierence.</p>
+  <p class="lead">Atos Generative Design</p>
   <hr class="my-4">
-  <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
-  <p class="lead">Baseurl: {{ baseurl }}.</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="{{ url_for('simulation.start') }}" role="button">Start</a>
+  <p>The engineering challenges of today require a smart approach to reduce development time and design cycles to beat the competitors of tomorrow.
+
+     Generative design supports the design engineer on his journey to the optimal design while reducing monotonous repetitive tasks allowing to focus on what matters, innovation. By combining nature inspired algorithms, cutting edge machine learning approaches and the power of modern hardware, generative design enables to learn from the past, improves the solutions of today and leverages product design to the next generation. 
   </p>
+  <p>
+    The benefits: #Reduced time2market, #Product innovation, #Optimal product design, #Collaborating design,
+    #Minimizing design iterations 
+  </p>
+  
+  <div id="header">
+    <img src="{{ url_for('static', filename='img/generativeDesign1.png') }}" width="80%" height="80%" alt="...">
+  </div>
+  <br>
+  <p class="lead">
+    <a class="btn btn-secondary btn-lg btn-block" href="{{ url_for('simulation.start') }}" role="button">Start</a>
+  </p>
+</div>
+
+
+<div class="card mb-3">
+  <br>
+  <div id="header">
+    <img src="{{ url_for('static', filename='img/generativeDesign2.png') }}" width="90%" height="90%" alt="...">
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Atos Generative Design - More than just design</h5>
+    <p class="card-text">
+        Atos supports the entire product life cycle, starting from the design phase to lessons learned implementation for the next generation of product developement and much more!
+    </p>
+  </div>
 </div>
 
 

@@ -2,6 +2,21 @@
 {% set active_page = "twin" %}
 {% block content %}
 
+<div class="card mb-3">
+  <div id="header">
+    <img src="{{ url_for('static', filename='img/wing.jpg') }}" width="60%" height="60%" alt="...">
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Generative Design Example - The Assignment</h5>
+    <p class="card-text">Your team and you are successfull aerodynamic design engineers. Your task is to design a single wing profile section (airfoil) for two different operating points. For each operating point the design will produce lift and drag. Since you are very busy you want to use Generative Design to explore the ultimative design by employing swarm intelligence. </p>
+    <button type="button" class="btn btn-secondary edit" id="itemCreateButton">Create Case</button>
+    <a href="{{ url_for('home') }}" class="btn btn-secondary">Back</a>
+    
+  </div>
+</div>
+
+
+
 <div class="card-columns">
 {% for case in cases %}
   <div class="card" id="datacard-{{loop.index}}" name="{{ case.id }}" >
@@ -17,7 +32,6 @@
 {% endfor %}
 </div>
 
-<button type="button" class="btn btn-secondary edit" id="itemCreateButton">Create case</button>
 
 
 

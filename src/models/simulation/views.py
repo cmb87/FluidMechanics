@@ -112,8 +112,8 @@ def optimize(caseid):
     constraints, targets = {}, {}
     for bnds,t,name in zip(roi, roitype, ['LiftOp1', 'LiftOp2', 'DragOp1', 'DragOp2']):
         if t==1 or t==-1:
-            targets[name] = {"bounds": bnds, "optidir": t}
-        else:
+            targets[name] = {"bounds": sorted([bnd*t for bnd in bnds]), "optidir": t}
+        elif t==2:
             constraints[name] = {"bounds": bnds}
 
     ### Optimize ###
@@ -148,8 +148,20 @@ def make_serverplot_ajax(caseid, plotnames=[['liftOP1', 'liftOP2', 'blue']], xla
 
     source = AjaxDataSource(data_url=request.url_root[:-1]+url_for('simulation.server_load', caseid=caseid), polling_interval=1000)
 
+    TOOLTIPS = [
+        ("DesignID", "$index"),
+        ("LiftOp1", "@liftOP1"),
+        ("LiftOp2", "@liftOP2"),
+        ("DragOp1", "@dragOP1"),
+        ("DragOp2", "@dragOP2"),
+        ("R", "@R"),
+        ("beta", "@beta"),
+        ("a", "@a"),
+    ]
+
     p = figure(plot_height=300, plot_width=800, title=title, sizing_mode='scale_width',
-               x_axis_label=xlabel, y_axis_label=ylabel)
+               x_axis_label=xlabel, y_axis_label=ylabel, toolbar_location="above", 
+               tooltips=TOOLTIPS)
     
     for var in plotnames:
         p.circle(var[0], var[1], source=source, color=var[2])
@@ -167,4 +179,5 @@ def server_load(caseid):
 
     return jsonify(liftOP1=[d["lop1"] for d in data], liftOP2=[d["lop2"] for d in data],
                    dragOP1=[d["dop1"] for d in data], dragOP2=[d["dop2"] for d in data],
-                   id=[d["id"] for d in data]) 
+                   id=[d["id"] for d in data], R=[d["R"] for d in data], a=[d["a"] for d in data],
+                   beta=[d["beta"] for d in data]) 

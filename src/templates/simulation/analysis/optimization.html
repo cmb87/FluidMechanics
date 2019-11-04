@@ -9,17 +9,18 @@
     </div>
 </div>
 
+<br>
+<a href="{{ url_for('simulation.start') }}" class="btn btn-primary">Back</a>
 <hr>
 <br>
 
 <div class="card">
   <div class="card-header">
-    Particle Swarm Optimization <cite title="Source Title"></cite>
+    Optimization Settings <cite title="Source Title"></cite>
   </div>
 
   <div class="card-body">
-  <p class="card-text">Please select your optimization settings.</p>
-        <hr class="my-4">  
+
         <form action="#" onsubmit="yourJsFunction();return false" id="optiform" >
 
           <p class="card-text">Optimizer Settings</p>
@@ -44,12 +45,13 @@
                     <span class="input-group-text">LiftOp1</span>
                 </div>
                 <select class="custom-select" name="isTargetLiftOp1">
-                    <option value="1" selected>Maximize</option>
+                    <option value="3">None</option>
+                    <option value="-1" selected>Maximize</option>
                     <option value="2">Minimize</option>
                     <option value="3">Constraint</option>
                 </select>
                 <input name="LiftMinOp1" type="number" class="form-control" placeholder="0" value="0"/>
-                <input name="LiftMaxOp1" type="number" class="form-control" placeholder="1" value="1"/>
+                <input name="LiftMaxOp1" type="number" class="form-control" placeholder="10" value="10"/>
             </div>
 
             <div class="input-group mb-3">
@@ -57,12 +59,13 @@
                     <span class="input-group-text">LiftOp2</span>
                 </div>
                 <select class="custom-select" name="isTargetLiftOp2">
-                    <option value="1" selected>Maximize</option>
+                    <option value="3" selected>None</option>
+                    <option value="-1" >Maximize</option>
                     <option value="2">Minimize</option>
                     <option value="3">Constraint</option>
                 </select>
                 <input name="LiftMinOp2" type="number" class="form-control" placeholder="0" value="0"/>
-                <input name="LiftMaxOp2" type="number" class="form-control" placeholder="1" value="1"/>
+                <input name="LiftMaxOp2" type="number" class="form-control" placeholder="10" value="1"/>
             </div>
 
             <div class="input-group mb-3">
@@ -70,12 +73,13 @@
                     <span class="input-group-text">DragOp1</span>
                 </div>
                 <select class="custom-select" name="isTargetDragOp1">
-                    <option value="-1" selected>Maximize</option>
+                    <option value="3" selected>None</option>
+                    <option value="-1" >Maximize</option>
                     <option value="1">Minimize</option>
                     <option value="2">Constraint</option>
                 </select>
                 <input name="DragMinOp1" type="number" class="form-control" placeholder="0" value="0"/>
-                <input name="DragMaxOp1" type="number" class="form-control" placeholder="1" value="1"/>
+                <input name="DragMaxOp1" type="number" class="form-control" placeholder="10" value="1"/>
             </div>
 
             <div class="input-group mb-3">
@@ -83,13 +87,14 @@
                     <span class="input-group-text">DragOp2</span>
                 </div>
                 <select class="custom-select" name="isTargetDragOp2">
-                    <option value="-1" selected>Maximize</option>
+                    <option value="3" selected>None</option>
+                    <option value="-1" >Maximize</option>
                     <option value="1">Minimize</option>
                     <option value="2">Constraint</option>
                 </select>
 
                 <input name="DragMinOp2" type="number" class="form-control" placeholder="0" value="0"/>
-                <input name="DragMaxOp2" type="number" class="form-control" placeholder="1" value="1"/>
+                <input name="DragMaxOp2" type="number" class="form-control" placeholder="10" value="1"/>
             </div>
   
             <!-- Design Space -->
@@ -100,8 +105,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">R</span>
                 </div>
-                <input name="Rmin" type="number" class="form-control" placeholder="{{ digitaltwin.R0 }}" value="{{ digitaltwin.R0 }}" min="1" step="0.1"/>
-                <input name="Rmax" type="number" class="form-control "placeholder="{{ digitaltwin.R0 }}" value="{{ digitaltwin.R0 }}" min="1" step="0.1"/>
+                <input name="Rmin" type="number" class="form-control" placeholder="1.01" value="1.01" min="1" step="0.1"/>
+                <input name="Rmax" type="number" class="form-control "placeholder="1.7" value="1.7" min="1" step="0.1"/>
             </div>
 
 
@@ -109,8 +114,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">&beta;</span>
                 </div>
-                <input name="betamin" type="number" class="form-control" placeholder="{{ digitaltwin.beta0 }}" value="{{ digitaltwin.beta0 }}" step="0.1"/>
-                <input name="betamax" type="number" class="form-control "placeholder="{{ digitaltwin.beta0 }}" value="{{ digitaltwin.beta0 }}" step="0.1"/>
+                <input name="betamin" type="number" class="form-control" placeholder="0.0" value="0.0" step="0.1"/>
+                <input name="betamax" type="number" class="form-control "placeholder="30.0" value="30.0" step="0.1"/>
             </div>
 
             <div class="input-group mb-3">
@@ -130,11 +135,21 @@
   </div>
 </div>
 
+
+<div class="card-group">
 {% for plot in plots %}
+  <div class="card">
+    <div class="card-header">
+      Optimization Results
+    </div>
     {% for part in plot %}
         {{part | safe}}
     {% endfor %}
+    <div class="card-body">
+    </div>
+  </div>
 {% endfor %}
+</div>
 
 <!-- Javascrip -->
 <script type="text/javascript">
