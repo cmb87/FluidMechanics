@@ -3,8 +3,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys
-import cv2 
-import io
 
 from bokeh.models import ColumnDataSource
 from bokeh.io import output_file
@@ -176,25 +174,11 @@ class JoukowskiAirfoil():
         data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
         return data
 
-    ### For Bokeh ###
-    @staticmethod
-    def fig2dataNew(fig):
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png", dpi=180)
-        buf.seek(0)
-        img_arr = np.frombuffer(buf.getvalue(), dtype=np.uint8)
-        buf.close()
-        img = cv2.imdecode(img_arr, 1)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-        return img
-
     ### Plot flowfield ###
     def plot_flowfield_bokeh(self):
         frame = JoukowskiAirfoil.fig2data(self.plot_flowfield(returnfig=True))
         h,w = frame.shape[0], frame.shape[1]
 
-        print(w,h)
         output_file("joukowski.html", title="image.py example")
         p = figure(x_range=[0, w], y_range=[0, h])
         p.image(image=[frame[:,:,:]], x=[0], y=[0], dw=[w], dh=[h])

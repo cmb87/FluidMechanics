@@ -3,8 +3,8 @@ import os
 import json
 import numpy as np
 
-from flask import Flask, render_template, url_for, request, jsonify
-from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
+from flask import Flask, render_template, url_for, request, jsonify, Response
+#from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
 
 sys.path.append('../')
 
@@ -47,6 +47,12 @@ def init_db():
 @app.route('/')
 def home():
     return render_template('home.html', baseurl=request.base_url)
+
+### Health check ###
+@app.route('/health')
+def health():
+    return Response("{'health':'ok'}", status=201, mimetype='application/json')
+
 
 ### Add blueprints ###
 from src.models.simulation.views import dt_blueprint
