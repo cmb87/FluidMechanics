@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 
-from src.models.optimizer.optimizer import Optimizer
-from src.models.optimizer.pareto import Pareto
+from .optimizer import Optimizer
+from .pareto import Pareto
 
 
 

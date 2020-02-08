@@ -1,17 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
-import numpy as np
-import matplotlib.pyplot as plt
 import os
 import sys
 import pickle
 import functools
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../'))
-
-from src.models.optimizer.pareto import Pareto
-from src.models.optimizer.optimizer import Optimizer
+from .pareto import Pareto
+from .optimizer import Optimizer
 
 class GA(Optimizer):
 

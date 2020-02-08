@@ -1,4 +1,4 @@
 SECRETKEY = "1337"
-SIMCOLLECTION = "simulation"
+SIMCOLLECTION = "simulations"
 DESIGNSCOLLECTION = "designs"
 LOGCOLLECTION = "logs"

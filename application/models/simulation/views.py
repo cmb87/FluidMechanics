@@ -10,10 +10,9 @@ from bokeh.plotting import figure, show
 from bokeh.models import AjaxDataSource, CustomJS
 from bokeh.embed import components
 
-
-from src.models.simulation.digitaltwin import DigitalTwin
-from src.models.simulation.digitaltwin import DesignLogMessage
-from src.common.flask_redirect import redirect_url
+from ..simulation.digitaltwin import DigitalTwin
+from ..simulation.digitaltwin import DesignLogMessage
+from ...common.flask_redirect import redirect_url
 
 dt_blueprint = Blueprint('simulation', __name__)
 

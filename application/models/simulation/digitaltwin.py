@@ -7,15 +7,14 @@ import uuid
 import datetime
 
 
-from src.common.database import Database
-from src.models.simulation.joukowski import JoukowskiAirfoil
-from src.models.optimizer.swarm import Swarm
-
-from src.config import SIMCOLLECTION
-from src.config import LOGCOLLECTION
-from src.config import DESIGNSCOLLECTION
+from ...common.database import Database
+from .joukowski import JoukowskiAirfoil
+from ..optimizer.swarm import Swarm
 
 
+SIMCOLLECTION = "simulations"
+LOGCOLLECTION = "logs"
+DESIGNSCOLLECTION = "designs"
 
 class Simulation(JoukowskiAirfoil):
     def __init__(self, id=None, Uinf=1, R=1.3, a=1.0, alpha=0.0, beta=1.0, rho=1.0, cl=None, cd=None, L=None, D=None, opid=0, analysisid=0):
@@ -68,7 +67,13 @@ class DesignLogMessage():
     ### Get all transactions ###
     @classmethod
     def retrieveAll(cls, caseid):
-        return [cls(**data) for data in Database.find(LOGCOLLECTION, query={"caseid":["=", caseid]})]
+
+        cases = Database.find(LOGCOLLECTION, query={"caseid":["=", caseid]})
+
+        if cases:
+            return [cls(**data) for data in cases]
+        else:
+            return []
 
 
 
@@ -85,10 +90,10 @@ class DigitalTwin(object):
         self.U2 = 1 if U2 is None else U2
         self.a0, self.R0, self.beta0 = a0, R0, beta0
 
-        if os.path.isdir("./static/res/{}".format(self.directory)):
+        if os.path.isdir("./application/static/res/{}".format(self.directory)):
             pass
         else:
-            os.mkdir("./static/res/{}".format(self.directory))
+            os.mkdir("./application/static/res/{}".format(self.directory))
 
     ### Convert to JSON ###
     def json(self):
@@ -115,7 +120,13 @@ class DigitalTwin(object):
     ### Retrieve from DB ###
     @classmethod
     def retrieveAll(cls):
-        return [cls(**case) for case in  Database.find(SIMCOLLECTION)]
+
+        cases =  Database.find(SIMCOLLECTION)
+        if cases:
+            return [cls(**data) for data in cases]
+        else:
+            return []
+        
 
     ### Retrieve from DB ###
     @classmethod
@@ -132,11 +143,11 @@ class DigitalTwin(object):
         sim2.calculateFlowField()
 
         if plot:
-            sim1.plot_flowfield(store=True, name="./static/res/{}/{}".format(self.directory, "flowfield1.png"))
-            sim2.plot_flowfield(store=True, name="./static/res/{}/{}".format(self.directory, "flowfield2.png"))
+            sim1.plot_flowfield(store=True, name="./application/static/res/{}/{}".format(self.directory, "flowfield1.png"))
+            sim2.plot_flowfield(store=True, name="./application/static/res/{}/{}".format(self.directory, "flowfield2.png"))
 
-            sim1.plot_cp(store=True, name="./static/res/{}/{}".format(self.directory, "profile1.png"))
-            sim2.plot_cp(store=True, name="./static/res/{}/{}".format(self.directory, "profile2.png"))
+            sim1.plot_cp(store=True, name="./application/static/res/{}/{}".format(self.directory, "profile1.png"))
+            sim2.plot_cp(store=True, name="./application/static/res/{}/{}".format(self.directory, "profile2.png"))
 
         return {'LiftOp1': np.around(sim1.lift,6), "ClOp1": np.around(sim1.lift_coefficient,6),
                 "DragOp1": np.around(sim1.drag,6), "CdOp1": np.around(sim1.drag_coefficient,6),

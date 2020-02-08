@@ -3,13 +3,6 @@ import sys
 import os
 import logging
 
-SRCDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../')
-sys.path.insert(0, SRCDIR)
-
-from src.common.logger import getLogger
-logger = getLogger(__name__)
-
-
 class Database(object):
 
     PATH2DB = "myDatabase.db"
@@ -33,9 +26,9 @@ class Database(object):
                 if cur.fetchone()[0] == 1:
                     return True
         except lite.Error as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         except Exception as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
 
         return False
 
@@ -51,12 +44,12 @@ class Database(object):
                 # method of the cursor and execute the SQL statement.
                 cur = con.cursor()
                 cur.execute("DROP TABLE IF EXISTS {}".format(tablename))
-                logger.info("Deleting table {}.".format(tablename))
+                logging.info("Deleting table {}.".format(tablename))
                 return True
         except lite.Error as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         except Exception as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         return False
 
     @staticmethod
@@ -77,14 +70,14 @@ class Database(object):
                     # method of the cursor and execute the SQL statement.
                     cur = con.cursor()
                     cur.execute("CREATE TABLE {}({})".format(tablename, ', '.join(columns)))
-                    logger.info("New table {} created sucessfully.".format(tablename))
+                    logging.info("New table {} created sucessfully.".format(tablename))
                     return True
             except lite.Error as e:
-                logger.warning("{}".format(e))
+                logging.warning("{}".format(e))
             except Exception as e:
-                logger.warning("{}".format(e))
+                logging.warning("{}".format(e))
         else:
-            logger.info("Table {} already exists. Reusing...".format(tablename))
+            logging.info("Table {} already exists. Reusing...".format(tablename))
         return False
 
     @staticmethod
@@ -95,7 +88,7 @@ class Database(object):
         db.insertMany("cars", ((5, "Hummer2", 3000), (6, "Audi", 4000)))
         """
         if len(rows) == 0:
-            logger.info("Nothing to insert!")
+            logging.info("Nothing to insert!")
             return
 
         placeholder = ', '.join(len(rows[0]) * ['?'])
@@ -110,16 +103,16 @@ class Database(object):
                     cur.executemany("INSERT INTO {}({}) VALUES({})".format(tablename, ", ".join(columnNames), placeholder), rows)
                 return True
         except lite.Error as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         except Exception as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         return False
 
 
     @staticmethod
     def insertManyInChunks(tablename, rows, columnNames, chunksize=200):
         if len(rows[0])< 999:
-            logger.info("This is unnecessary! Use insertMany instead")
+            logging.info("This is unnecessary! Use insertMany instead")
             return Database.insertMany(tablename, rows, columns)
 
         for start in range(0, len(rows[0]), chunksize):
@@ -135,7 +128,7 @@ class Database(object):
         Insert a list of dictionaries
         """
         if len(rows) == 0:
-            logger.info("Nothing to insert!")
+            logging.info("Nothing to insert!")
             return
 
         con = lite.connect(Database.PATH2DB)
@@ -151,9 +144,9 @@ class Database(object):
                     return cur.lastrowid
                     
             except lite.Error as e:
-                logger.warning("{}".format(e))
+                logging.warning("{}".format(e))
             except Exception as e:
-                logger.warning("{}".format(e))
+                logging.warning("{}".format(e))
             return False
 
     @staticmethod
@@ -175,10 +168,10 @@ class Database(object):
                 cur.execute("UPDATE {} SET {} WHERE {}".format(tablename, ', '.join(keys), ' AND '.join(qkeys)), vals + qvals)
                 return True
         except lite.Error as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
 
         except Exception as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
 
         return False
 
@@ -196,9 +189,9 @@ class Database(object):
                 return cur.fetchone().keys()
 
         except lite.Error as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         except Exception as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
 
     @staticmethod
     def _queryProcessor(query):
@@ -224,7 +217,7 @@ class Database(object):
         if variables is None:
             variables = ['*']
         elif not isinstance(variables,list):
-            logger.warning("variables must be a list!")
+            logging.warning("variables must be a list!")
             return
         if distinct:
             distinct = "DISTINCT"
@@ -247,9 +240,9 @@ class Database(object):
                     return list(map(dict, cur.fetchall()))
 
         except lite.Error as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         except Exception as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
 
         return None
 
@@ -269,9 +262,9 @@ class Database(object):
                 cur.execute("DELETE FROM {} WHERE {}".format(tablename, ' AND '.join(keys)), vals)
                 return True
         except lite.Error as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         except Exception as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         return False
 
     @staticmethod
@@ -293,9 +286,9 @@ class Database(object):
                 return cur.fetchall()
 
         except lite.Error as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
         except Exception as e:
-            logger.warning("{}".format(e))
+            logging.warning("{}".format(e))
 
 
 # if __name__ == "__main__":

@@ -5,7 +5,7 @@ import sys
 import pickle
 import functools
 
-from src.models.optimizer.pareto import Pareto
+from .pareto import Pareto
 
 
 ### Generic Optimizer class ###
